@@ -36,6 +36,7 @@ Checks: >
   -cert-err58-cpp,
   -cppcoreguidelines-avoid-non-const-global-variables,
   -hicpp-no-array-decay,
-  -cppcoreguidelines-pro-bounds-array-to-pointer-decay
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -readability-redundant-access-specifiers
 
 WarningsAsErrors: true

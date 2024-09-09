@@ -13,12 +13,38 @@ add_subdirectory(test)
 add_test(NAME square_matrix COMMAND test_square)
 add_test(NAME mxn_matrix COMMAND test_mxn)
 
+find_package(Qt6 COMPONENTS Widgets QUIET)
+if (NOT Qt6_FOUND)
+    message(STATUS "Qt6 not found. Trying to find Qt5.")
+    find_package(Qt5 COMPONENTS Widgets REQUIRED)
+    set(QT_VERSION_MAJOR 5)
+	set(CMAKE_AUTOMOC ON)
+	set(CMAKE_AUTORCC ON)
+	set(CMAKE_AUTOUIC ON)
+else()
+    set(QT_VERSION_MAJOR 6)
+	qt_standard_project_setup()
+endif()
+
 add_executable(${PROJECT_NAME}
 	src/main.cpp
 	src/spiral_strategy.cpp
 	src/spiral_conditional.cpp
 	src/spiral_path.cpp
 	src/matrix_filling.cpp
+	include/window.hpp # adding this for qt moc and for now dont know workaround
+	src/window.cpp
+	src/application.cpp
+)
+
+if (QT_VERSION_MAJOR EQUAL 6)
+	target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
+elseif (QT_VERSION_MAJOR EQUAL 5)
+	target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets)
+endif()
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    WIN32_EXECUTABLE ON
 )
 
 if (NOT MSVC)
