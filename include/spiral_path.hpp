@@ -1,51 +1,53 @@
 #pragma once
 
-#include "spiral_conditional.hpp"
-#include "matrix.hpp"
 #include "corner_points.hpp"
+#include "matrix.hpp"
 #include "matrix_filling.hpp"
+#include "spiral_conditional.hpp"
 
-namespace spiral {
+namespace spiral
+{
 
-	class spiral_path {
+	class ISpiralPath
+	{
 		public:
-			virtual ~spiral_path() = default;
+			virtual ~ISpiralPath() = default;
 
-			virtual std::vector<int> make_path() = 0;
+			virtual std::vector<int> MakePath() = 0;
 	};
 
-	using conditional = std::unique_ptr<spiral_conditional>;
-	using filling_strategy = std::unique_ptr<matrix_filling_strategy<int>>;
+	using Conditional     = std::unique_ptr<ISpiralConditional>;
+	using FillingStrategy = std::unique_ptr<IMatrixFillingStrategy<int>>;
 
-	// General idea of this solution is to set corner points in [0, 0], [0, cols - 1], [rows - 1, 0], [rows - 1, cols - 1]
-	// and then to move them to center after each circle run and check stop condition.
-	// As the name implies this is clockwise order path solution.
-	class spiral_path_clockwise : public spiral_path {
+	// General idea of this solution is to set corner points in [0, 0], [0, cols - 1], [rows - 1, 0], [rows - 1,
+	// cols - 1] and then to move them to center after each circle run and check stop condition. As the name implies
+	// this is clockwise order path solution.
+	class SpiralPathClockwise : public ISpiralPath
+	{
 		public:
-			spiral_path_clockwise(size_t rows, size_t cols,
-                conditional stop_cond  = nullptr,
-				filling_strategy fill_strat = nullptr);
+			SpiralPathClockwise(size_t rows, size_t cols, Conditional StopCond = nullptr,
+			                    FillingStrategy FillStrat = nullptr);
 
-			std::vector<int> make_path() override;
+			std::vector<int> MakePath() override;
 
 		private:
-			std::vector<int> path_;
-			bool calculated_ = false;
-			matrix_pos<size_t> cur_pos_ { 0, 0 };
-			std::shared_ptr<corners> corners_;
-			std::unique_ptr<spiral_conditional> stop_conditional_;
-			std::unique_ptr<matrix_filling_strategy<int>> filling_strategy_;
-			matrix2D<int> matrix_;
+			std::vector<int>                             m_Path;
+			bool                                         m_isCalculated = false;
+			matrix_pos<size_t>                           m_CurPos{ 0, 0 };
+			std::shared_ptr<corners>                     m_Corners;
+			std::unique_ptr<ISpiralConditional>          m_StopConditional;
+			std::unique_ptr<IMatrixFillingStrategy<int>> m_FillingStrategy;
+			Matrix2D<int>                                m_Matrix;
 
-			void up();
-			void down();
-			void left();
-			void right();
-			void pull_corner_points();
+			void Up();
+			void Down();
+			void Left();
+			void Right();
+			void PullCornerPoints();
 
-			void prelude();
-			void traverse();
-			void aftermath();
+			void Prelude();
+			void Traverse();
+			void Aftermath();
 	};
 
-}
+} // namespace spiral

@@ -1,111 +1,145 @@
 #include "spiral_path.hpp"
 
-namespace spiral {
+namespace spiral
+{
 
-	spiral_path_clockwise::spiral_path_clockwise(size_t rows, size_t cols, conditional stop_cond, filling_strategy fill_strat) :
-		corners_(std::make_shared<corners>(rows, cols)),
-		stop_conditional_(stop_cond == nullptr ? std::make_unique<spiral_conditional_clockwise>(rows, cols, corners_) : std::move(stop_cond)),
-		filling_strategy_(fill_strat == nullptr ? std::make_unique<matrix_filling_sequential<int>>() : std::move(fill_strat)),
-		matrix_(filling_strategy_->fill(rows, cols))
-	{}
-
-	std::vector<int> spiral_path_clockwise::make_path() {
-		prelude();
-
-		if (calculated_) {
-			return path_;
-		}
-
-		traverse();
-		aftermath();
-
-		calculated_ = true;
-		return path_;
+	SpiralPathClockwise::SpiralPathClockwise(size_t rows, size_t cols, Conditional StopCond,
+	                                         FillingStrategy FillStrat)
+	    : m_Corners(std::make_shared<corners>(rows, cols)),
+	      m_StopConditional(StopCond == nullptr
+	                            ? std::make_unique<SpiralConditionalClockwise>(rows, cols, m_Corners)
+	                            : std::move(StopCond)),
+	      m_FillingStrategy(FillStrat == nullptr ? std::make_unique<MatrixFillingSequential<int>>()
+	                                             : std::move(FillStrat)),
+	      m_Matrix(m_FillingStrategy->Fill(rows, cols))
+	{
 	}
 
-	void spiral_path_clockwise::prelude() {
-		if (calculated_) {
+	std::vector<int> SpiralPathClockwise::MakePath()
+	{
+		Prelude();
+
+		if (m_isCalculated)
+		{
+			return m_Path;
+		}
+
+		Traverse();
+		Aftermath();
+
+		m_isCalculated = true;
+		return m_Path;
+	}
+
+	void SpiralPathClockwise::Prelude()
+	{
+		if (m_isCalculated)
+		{
 			return;
 		}
 
-		if (matrix_.get_rows() == 0 || matrix_.get_cols() == 0) {
-			calculated_ = true;
+		if (m_Matrix.GetRows() == 0 || m_Matrix.GetCols() == 0)
+		{
+			m_isCalculated = true;
 			return;
 		}
 
-		if (matrix_.get_rows() == 1) {
-			for (size_t j = 0; j < matrix_.get_cols(); j++) {
-				path_.emplace_back(matrix_[0][j]);
-			}
-		} else if (matrix_.get_cols() == 1) {
-			for (size_t i = 0; i < matrix_.get_rows(); i++) {
-				path_.emplace_back(matrix_[i][0]);
+		if (m_Matrix.GetRows() == 1)
+		{
+			for (size_t j = 0; j < m_Matrix.GetCols(); j++)
+			{
+				m_Path.emplace_back(m_Matrix[0][j]);
 			}
 		}
+		else if (m_Matrix.GetCols() == 1)
+		{
+			for (size_t i = 0; i < m_Matrix.GetRows(); i++)
+			{
+				m_Path.emplace_back(m_Matrix[i][0]);
+			}
+		}
 
-		if (!path_.empty()) {
-			calculated_ = true;
+		if (!m_Path.empty())
+		{
+			m_isCalculated = true;
 		}
 	}
 
-	void spiral_path_clockwise::traverse() {
-		path_.emplace_back(matrix_[0][0]);
+	void SpiralPathClockwise::Traverse()
+	{
+		m_Path.emplace_back(m_Matrix[0][0]);
 
-		while (!stop_conditional_->satisfied()) {
-			right();
-			down();
-			left();
-			up();
-			pull_corner_points();
+		while (!m_StopConditional->Satisfied())
+		{
+			Right();
+			Down();
+			Left();
+			Up();
+			PullCornerPoints();
 		}
 	}
 
-	void spiral_path_clockwise::aftermath() {
-		// exceptions to a rule when there is left elements that is not in the path
-		if ((matrix_.get_rows() == matrix_.get_cols()) && matrix_.get_rows() % 2 != 0) {
-			path_.emplace_back(matrix_[corners_->ul.row][corners_->ul.col]);
-		} else if (matrix_.get_rows() == 3 && matrix_.get_cols() != 2) {
-			right();
-		} else if (matrix_.get_cols() == 3 && matrix_.get_rows() != 2) {
-			cur_pos_.col++;
-			path_.emplace_back(matrix_[cur_pos_.row][cur_pos_.col]);
-			down();
+	void SpiralPathClockwise::Aftermath()
+	{
+		// exceptions to a rule when there is left elements that is not appended to the path
+		if ((m_Matrix.GetRows() == m_Matrix.GetCols()) && m_Matrix.GetRows() % 2 != 0)
+		{
+			m_Path.emplace_back(m_Matrix[m_Corners->ul.row][m_Corners->ul.col]);
+		}
+		else if (m_Matrix.GetRows() == 3 && m_Matrix.GetCols() != 2)
+		{
+			Right();
+		}
+		else if (m_Matrix.GetCols() == 3 && m_Matrix.GetRows() != 2)
+		{
+			m_CurPos.col++;
+			m_Path.emplace_back(m_Matrix[m_CurPos.row][m_CurPos.col]);
+			Down();
 		}
 	}
 
-	void spiral_path_clockwise::up() {
-		for (size_t i = cur_pos_.row - 1; i >= corners_->ul.row + 1 && i < SIZE_T_MAX; i--) {
-			path_.emplace_back(matrix_[i][corners_->ll.col]);
-			cur_pos_ = { i, corners_->ll.col };
+	void SpiralPathClockwise::Up()
+	{
+		for (size_t i = m_CurPos.row - 1; i >= m_Corners->ul.row + 1 && i < SIZE_T_MAX; i--)
+		{
+			m_Path.emplace_back(m_Matrix[i][m_Corners->ll.col]);
+			m_CurPos = { i, m_Corners->ll.col };
 		}
 	}
 
-	void spiral_path_clockwise::down() {
-		for (size_t i = cur_pos_.row + 1; i <= corners_->lr.row; i++) {
-			path_.emplace_back(matrix_[i][corners_->ur.col]);
-			cur_pos_ = { i, corners_->ur.col };
+	void SpiralPathClockwise::Down()
+	{
+		for (size_t i = m_CurPos.row + 1; i <= m_Corners->lr.row; i++)
+		{
+			m_Path.emplace_back(m_Matrix[i][m_Corners->ur.col]);
+			m_CurPos = { i, m_Corners->ur.col };
 		}
 	}
 
-	void spiral_path_clockwise::left() {
-		for (size_t j = cur_pos_.col - 1; j >= corners_->ll.col && j < SIZE_T_MAX; j--) {
-			path_.emplace_back(matrix_[corners_->lr.row][j]);
-			cur_pos_ = { corners_->lr.row, j };
+	void SpiralPathClockwise::Left()
+	{
+		for (size_t j = m_CurPos.col - 1; j >= m_Corners->ll.col && j < SIZE_T_MAX; j--)
+		{
+			m_Path.emplace_back(m_Matrix[m_Corners->lr.row][j]);
+			m_CurPos = { m_Corners->lr.row, j };
 		}
 	}
 
-	void spiral_path_clockwise::right() {
-		for (size_t j = cur_pos_.col + 1; j <= corners_->ur.col; j++) {
-			path_.emplace_back(matrix_[corners_->ul.row][j]);
-			cur_pos_ = { corners_->ul.row, j };
+	void SpiralPathClockwise::Right()
+	{
+		for (size_t j = m_CurPos.col + 1; j <= m_Corners->ur.col; j++)
+		{
+			m_Path.emplace_back(m_Matrix[m_Corners->ul.row][j]);
+			m_CurPos = { m_Corners->ul.row, j };
 		}
 	}
 
-	void spiral_path_clockwise::pull_corner_points() {
-		corners_->ul.row++, corners_->ul.col++;
-		corners_->ur.row++, corners_->ur.col--;
-		corners_->ll.row--, corners_->ll.col++;
-		corners_->lr.row--, corners_->lr.col--;
+	void SpiralPathClockwise::PullCornerPoints()
+	{
+		m_Corners->ul.row++, m_Corners->ul.col++;
+		m_Corners->ur.row++, m_Corners->ur.col--;
+		m_Corners->ll.row--, m_Corners->ll.col++;
+		m_Corners->lr.row--, m_Corners->lr.col--;
 	}
 
-}
+} // namespace spiral

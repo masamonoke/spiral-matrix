@@ -1,40 +1,49 @@
 #include "application.hpp"
 #include "spiral_path.hpp"
 
-#include <span>
 #include <iostream>
+#include <span>
 #include <sstream>
 
-namespace spiral {
+namespace spiral
+{
 
-	std::string app::stringify_path(std::vector<int> path) {
-		if (path.empty()) {
+	std::string IApp::StringifyPath(std::vector<int> path)
+	{
+		if (path.empty())
+		{
 			return "";
 		}
 
 		std::ostringstream oss;
-		std::copy(path.begin(), path.end() - 1,
-		std::ostream_iterator<int>(oss, ", "));
+		std::copy(path.begin(), path.end() - 1, std::ostream_iterator<int>(oss, ", "));
 		oss << path.back();
 
 		return oss.str();
 	}
 
-	int console_app::run() {
-		auto args = std::span(argv_, static_cast<size_t>(argc_));
-		try {
+	int ConsoleApp::Run()
+	{
+		auto args = std::span(m_argv, static_cast<size_t>(m_argc));
+		try
+		{
 			const ssize_t rows = std::stoll(args[1]);
 			const ssize_t cols = std::stoll(args[2]);
-			validate(rows, cols);
+			Validate(rows, cols);
 
-			std::unique_ptr<spiral::spiral_path> p (new spiral::spiral_path_clockwise(static_cast<size_t>(rows), static_cast<size_t>(cols)));
-			auto path = p->make_path();
+			std::unique_ptr<spiral::ISpiralPath> SpiralPath(
+			    new spiral::SpiralPathClockwise(static_cast<size_t>(rows), static_cast<size_t>(cols)));
+			auto path = SpiralPath->MakePath();
 
-			std::cout << stringify_path(path) << '\n';
-		} catch (const std::invalid_argument& e) {
+			std::cout << StringifyPath(path) << '\n';
+		}
+		catch (const std::invalid_argument& e)
+		{
 			std::cerr << "Wrong rows or columns value passed: " << e.what() << '\n';
 			return 1;
-		} catch (const std::out_of_range& e) {
+		}
+		catch (const std::out_of_range& e)
+		{
 			std::cerr << "Rows or columns number is out of range value: " << e.what() << '\n';
 			return 1;
 		}
@@ -42,52 +51,59 @@ namespace spiral {
 		return 0;
 	}
 
-	void console_app::validate(ssize_t rows, ssize_t cols) {
+	void ConsoleApp::Validate(ssize_t rows, ssize_t cols)
+	{
 		// works too slow and result will be also too much
-		if (rows >= std::numeric_limits<int32_t>::max() || cols >= std::numeric_limits<int32_t>::max()) {
+		if (rows >= std::numeric_limits<int32_t>::max() || cols >= std::numeric_limits<int32_t>::max())
+		{
 			throw std::invalid_argument("too big number");
 		}
 
-		if (rows < 0 || cols < 0) {
+		if (rows < 0 || cols < 0)
+		{
 			throw std::invalid_argument("negative row or column value");
 		}
 	}
 
-	qt_app::qt_app(int argc, char** argv) : qapp_(argc, argv) {
-		w_ = std::make_unique<ui::qt_window>([] (const std::string& rows, const std::string& cols) {
-			return button_callback(rows, cols);
-		}, "Matrix Spiral");
+	QtApp::QtApp(int argc, char** argv) : m_QtApp(argc, argv)
+	{
+		m_Window = std::make_unique<ui::QtWindow>([](const std::string& rows, const std::string& cols)
+		                                          { return ButtonCallback(rows, cols); }, "Matrix Spiral");
 	}
 
-	int qt_app::run() {
-		w_->show();
+	int QtApp::Run()
+	{
+		m_Window->show();
 		return QApplication::exec();
 	}
 
-
-	std::string qt_app::button_callback(const std::string& rows_str, const std::string& cols_str) {
-		size_t rows {};
-		size_t cols {};
-		std::tie(rows, cols) = parse_input(rows_str, cols_str);
-		std::unique_ptr<spiral::spiral_path> p (new spiral::spiral_path_clockwise(rows, cols));
-		auto path = p->make_path();
-		return stringify_path(path);
+	std::string QtApp::ButtonCallback(const std::string& rowsStr, const std::string& colsStr)
+	{
+		size_t rows{};
+		size_t cols{};
+		std::tie(rows, cols) = ParseInput(rowsStr, colsStr);
+		std::unique_ptr<spiral::ISpiralPath> SpiralPath(new spiral::SpiralPathClockwise(rows, cols));
+		auto                                 path = SpiralPath->MakePath();
+		return StringifyPath(path);
 	}
 
-	std::pair<size_t, size_t> qt_app::parse_input(const std::string& rows_str, const std::string& cols_str) {
-		const ssize_t rows = std::stoll(rows_str);
-		const ssize_t cols = std::stoll(cols_str);
+	std::pair<size_t, size_t> QtApp::ParseInput(const std::string& rowsStr, const std::string& colsStr)
+	{
+		const ssize_t rows = std::stoll(rowsStr);
+		const ssize_t cols = std::stoll(colsStr);
 
 		// works too slow and result will be also too much
-		if (rows >= std::numeric_limits<int32_t>::max() || cols >= std::numeric_limits<int>::max()) {
+		if (rows >= std::numeric_limits<int32_t>::max() || cols >= std::numeric_limits<int32_t>::max())
+		{
 			throw std::invalid_argument("too big number");
 		}
 
-		if (rows < 0 || cols < 0) {
+		if (rows < 0 || cols < 0)
+		{
 			throw std::invalid_argument("negative row or column value");
 		}
 
 		return { rows, cols };
 	}
 
-}
+} // namespace spiral

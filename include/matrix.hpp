@@ -2,35 +2,46 @@
 
 #include <vector>
 
-namespace spiral {
+namespace spiral
+{
 
-	template<typename T>
-	class matrix2D {
+	template <typename T>
+	class Matrix2D
+	{
 		using mat = std::vector<std::vector<T>>;
 
 		public:
-			matrix2D(size_t rows, size_t cols) : matrix_(rows, std::vector<T>(cols, 0)), rows_(rows), cols_(cols) {}
-
-			std::vector<T>& operator[](size_t row) {
-				return matrix_[row];
+			Matrix2D(size_t rows, size_t cols)
+			    : m_Matrix(rows, std::vector<T>(cols, 0)),
+			      m_rows(rows),
+			      m_cols(cols)
+			{
 			}
 
-			const std::vector<T>& operator[](size_t row) const {
-				return matrix_[row];
+			std::vector<T>& operator[](size_t row)
+			{
+				return m_Matrix[row];
 			}
 
-			[[nodiscard]] size_t get_rows() const {
-				return rows_;
+			const std::vector<T>& operator[](size_t row) const
+			{
+				return m_Matrix[row];
 			}
 
-			[[nodiscard]] size_t get_cols() const {
-				return cols_;
+			[[nodiscard]] size_t GetRows() const
+			{
+				return m_rows;
+			}
+
+			[[nodiscard]] size_t GetCols() const
+			{
+				return m_cols;
 			}
 
 		private:
-			mat matrix_;
-			size_t rows_;
-			size_t cols_;
+			mat    m_Matrix;
+			size_t m_rows;
+			size_t m_cols;
 	};
 
-}
+} // namespace spiral

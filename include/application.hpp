@@ -2,41 +2,46 @@
 
 #include "window.hpp"
 
-namespace spiral {
+namespace spiral
+{
 
-	class app {
+	class IApp
+	{
 		public:
-			virtual ~app() = default;
+			virtual ~IApp() = default;
 
-			virtual int run() = 0;
+			virtual int Run() = 0;
 
-			static std::string stringify_path(std::vector<int> path);
+			static std::string StringifyPath(std::vector<int> path);
 	};
 
-	class console_app : public app {
+	class ConsoleApp : public IApp
+	{
 		public:
-			console_app(int argc, char** argv) : argc_(argc), argv_(argv) {}
+			ConsoleApp(int argc, char** argv) : m_argc(argc), m_argv(argv) {}
 
-			int run() override;
+			int Run() override;
 
 		private:
-			int argc_;
-			char** argv_;
+			int    m_argc;
+			char** m_argv;
 
-			static void validate(ssize_t rows, ssize_t cols);
+			static void Validate(ssize_t rows, ssize_t cols);
 	};
 
-	class qt_app : public app {
+	class QtApp : public IApp
+	{
 		public:
-			qt_app(int argc, char** argv);
+			QtApp(int argc, char** argv);
 
-			int run() override;
+			int Run() override;
 
 		private:
-			QApplication qapp_;
-			std::unique_ptr<ui::qt_window> w_;
+			QApplication                  m_QtApp;
+			std::unique_ptr<ui::QtWindow> m_Window;
 
-			static std::string button_callback(const std::string& rows_str, const std::string& cols_str);
-			static std::pair<size_t, size_t> parse_input(const std::string& rows_str, const std::string& cols_str);
+			static std::string ButtonCallback(const std::string& rowsStr, const std::string& colsStr);
+			static std::pair<size_t, size_t> ParseInput(const std::string& rowsStr,
+			                                            const std::string& colsStr);
 	};
-}
+} // namespace spiral

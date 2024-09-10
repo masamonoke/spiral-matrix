@@ -1,62 +1,71 @@
 #include "window.hpp"
 
-#include <QLabel>
 #include <QFormLayout>
+#include <QLabel>
 
-namespace spiral::ui {
+namespace spiral::ui
+{
 
-	qt_window::qt_window(callback button_callback, const std::string& title, int width, int height, QWidget* parent) :
-		QWidget(parent),
-		text_row_input_(new QLineEdit(this)),
-		text_col_input_(new QLineEdit(this)),
-		button_(new QPushButton("Go", this)),
-		output_box_(new QTextEdit(this)),
-		button_callback_(std::move(button_callback))
+	QtWindow::QtWindow(Callback ButtonCallback, const std::string& title, int width, int height, QWidget* Parent)
+	    : QWidget(Parent),
+	      m_TextRowInput(new QLineEdit(this)),
+	      m_TextColInput(new QLineEdit(this)),
+	      m_Button(new QPushButton("Go", this)),
+	      m_OutputBox(new QTextEdit(this)),
+	      m_ButtonCallback(std::move(ButtonCallback))
 	{
-		output_box_->setReadOnly(true);
+		m_OutputBox->setReadOnly(true);
 
-		create_layout();
+		CreateLayout();
 
 		setWindowTitle(QString::fromStdString(title));
 		resize(width, height);
 
-		connect(button_, &QPushButton::clicked, this, &qt_window::clicked);
+		connect(m_Button, &QPushButton::clicked, this, &QtWindow::clicked);
 	}
 
-	QGroupBox* qt_window::create_group_box() {
+	QGroupBox* QtWindow::CreateGroupBox()
+	{
 		auto* formGroupBox = new QGroupBox(tr("Matrix Data"));
-		auto* l = new QFormLayout;
-		l->addRow(new QLabel(tr("Rows:")), text_row_input_);
-		l->addRow(new QLabel(tr("Cols:")), text_col_input_);
+		auto* l            = new QFormLayout;
+		l->addRow(new QLabel(tr("Rows:")), m_TextRowInput);
+		l->addRow(new QLabel(tr("Cols:")), m_TextColInput);
 		formGroupBox->setLayout(l);
 		return formGroupBox;
 	}
 
-	void qt_window::create_layout() {
+	void QtWindow::CreateLayout()
+	{
 		auto* layout = new QVBoxLayout(this);
-		layout->addWidget(create_group_box());
-		layout->addWidget(button_);
-		layout->addWidget(output_box_);
+		layout->addWidget(CreateGroupBox());
+		layout->addWidget(m_Button);
+		layout->addWidget(m_OutputBox);
 		setLayout(layout);
 	}
 
-	void qt_window::clicked() {
-        auto rows_text = text_row_input_->text();
-		auto cols_text = text_col_input_->text();
-		text_row_input_->clear();
-		text_col_input_->clear();
-		try {
-			auto data = button_callback_(rows_text.toStdString(), cols_text.toStdString());
-			output_box_->setText(QString::fromStdString(data));
-		} catch (const std::invalid_argument& e) {
+	void QtWindow::clicked()
+	{
+		auto rowsText = m_TextRowInput->text();
+		auto colsText = m_TextColInput->text();
+		m_TextRowInput->clear();
+		m_TextColInput->clear();
+		try
+		{
+			auto data = m_ButtonCallback(rowsText.toStdString(), colsText.toStdString());
+			m_OutputBox->setText(QString::fromStdString(data));
+		}
+		catch (const std::invalid_argument& e)
+		{
 			auto msg = "Wrong rows or columns value passed: " + std::string(e.what());
 			QMessageBox::critical(this, "Invalid Format Error", QString::fromStdString(msg));
-			output_box_->clear();
-		} catch (const std::out_of_range& e) {
+			m_OutputBox->clear();
+		}
+		catch (const std::out_of_range& e)
+		{
 			auto msg = "Rows or columns number is out of range value: " + std::string(e.what());
 			QMessageBox::critical(this, "Out of range Error", QString::fromStdString(msg));
-			output_box_->clear();
+			m_OutputBox->clear();
 		}
 	}
 
-}
+} // namespace spiral::ui

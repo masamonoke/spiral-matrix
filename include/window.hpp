@@ -1,37 +1,40 @@
 #pragma once
 
 #include <QApplication>
-#include <QWidget>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QTextEdit>
-#include <QMessageBox>
-#include <QHBoxLayout>
 #include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QWidget>
 
-namespace spiral::ui {
+namespace spiral::ui
+{
 
-	class qt_window : public QWidget {
+	class QtWindow : public QWidget
+	{
 		Q_OBJECT
 
-		using callback = std::function<std::string(std::string, std::string)>;
+		using Callback = std::function<std::string(std::string, std::string)>;
 
 		public:
-			qt_window(callback button_callback, const std::string& title, int width = 300, int height = 200, QWidget* parent = nullptr);
+			QtWindow(Callback ButtonCallback, const std::string& title, int width = 300, int height = 200,
+			         QWidget* Parent = nullptr);
 
 		private slots:
-			void clicked();
+			void clicked(); // NOLINT
 
 		private:
-			QLineEdit* text_row_input_;
-			QLineEdit* text_col_input_;
-			QPushButton* button_;
-			QTextEdit* output_box_;
-			callback button_callback_;
+			QLineEdit*   m_TextRowInput;
+			QLineEdit*   m_TextColInput;
+			QPushButton* m_Button;
+			QTextEdit*   m_OutputBox;
+			Callback     m_ButtonCallback;
 
-			QGroupBox* create_group_box();
-			void create_layout();
+			QGroupBox* CreateGroupBox();
+			void       CreateLayout();
 	};
 
-}
+} // namespace spiral::ui

@@ -4,49 +4,56 @@
 
 #include <memory>
 
-namespace spiral {
+namespace spiral
+{
 
-	class matrix_corner_strategy {
+	class MatrixCornerStrategy
+	{
 		public:
-			matrix_corner_strategy(size_t rows, size_t cols) : rows_(rows), cols_(cols) {}
-			virtual ~matrix_corner_strategy() = default;
+			MatrixCornerStrategy(size_t rows, size_t cols);
+			virtual ~MatrixCornerStrategy() = default;
 
-			virtual bool met(const corners& corners) = 0;
+			virtual bool IsMet(const corners& Corners) = 0;
 
-			[[nodiscard]] size_t rows() const {
-				return rows_;
+			[[nodiscard]] size_t Rows() const
+			{
+				return m_rows;
 			}
 
-			[[nodiscard]] size_t cols() const {
-				return cols_;
+			[[nodiscard]] size_t Cols() const
+			{
+				return m_cols;
 			}
 
 		private:
-			size_t rows_;
-			size_t cols_;
+			size_t m_rows;
+			size_t m_cols;
 	};
 
-	class matrix_corner_strategy_nxn : public matrix_corner_strategy {
+	class MatrixCornerStrategyNxN : public MatrixCornerStrategy
+	{
 		public:
-			matrix_corner_strategy_nxn(size_t rows, size_t cols) : matrix_corner_strategy(rows, cols) {}
+			MatrixCornerStrategyNxN(size_t rows, size_t cols);
 
-			bool met(const corners& corners) override;
+			bool IsMet(const corners& Corners) override;
 	};
 
-	class matrix_corner_strategy_3xn_or_nx3: public matrix_corner_strategy {
+	class MatrixCornerStrategy3xNOrNx3 : public MatrixCornerStrategy
+	{
 		public:
-			matrix_corner_strategy_3xn_or_nx3(size_t rows, size_t cols) : matrix_corner_strategy(rows, cols) {}
+			MatrixCornerStrategy3xNOrNx3(size_t rows, size_t cols);
 
-			bool met(const corners& corners) override;
+			bool IsMet(const corners& Corners) override;
 	};
 
-	class matrix_corner_strategy_mxn: public matrix_corner_strategy {
+	class MatrixCornerStrategyMxN : public MatrixCornerStrategy
+	{
 		public:
-			matrix_corner_strategy_mxn(size_t rows, size_t cols) : matrix_corner_strategy(rows, cols) {}
+			MatrixCornerStrategyMxN(size_t rows, size_t cols);
 
-			bool met(const corners& corners) override;
+			bool IsMet(const corners& Corners) override;
 	};
 
-	std::unique_ptr<matrix_corner_strategy> choose_corner_strategy(size_t rows, size_t cols);
+	std::unique_ptr<MatrixCornerStrategy> choose_corner_strategy(size_t rows, size_t cols);
 
-}
+} // namespace spiral

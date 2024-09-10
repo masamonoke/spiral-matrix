@@ -9,6 +9,7 @@ Checks: >
   readability-*,
   cert*,
   misc-include-cleaner-*,
+  readability-identifier-naming,
   -google-readability-namespace-comments,
   -google-runtime-int,
   -google-runtime-references,
@@ -38,3 +39,19 @@ Checks: >
   -hicpp-no-array-decay,
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   -readability-redundant-access-specifiers
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+
+  - key: readability-identifier-naming.StructCase
+    value: lower_case
+
+  - key: readability-identifier-naming.MethodCase
+    value: CamelCase
+
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+
+  - key: readability-identifier-naming.EnumConstantCase
+    value: CamelCase
