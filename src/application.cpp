@@ -8,13 +8,17 @@
 namespace spiral {
 
 	std::string app::stringify_path(std::vector<int> path) {
+		if (path.empty()) {
+			return "";
+		}
+
 		std::ostringstream oss;
 		std::copy(path.begin(), path.end() - 1,
 		std::ostream_iterator<int>(oss, ", "));
 		oss << path.back();
+
 		return oss.str();
 	}
-
 
 	int console_app::run() {
 		auto args = std::span(argv_, static_cast<size_t>(argc_));
@@ -23,15 +27,15 @@ namespace spiral {
 			const ssize_t cols = std::stoll(args[2]);
 			validate(rows, cols);
 
-			std::unique_ptr<spiral::spiral_path> p (new spiral::sprial_path_clockwise(static_cast<size_t>(rows), static_cast<size_t>(cols)));
+			std::unique_ptr<spiral::spiral_path> p (new spiral::spiral_path_clockwise(static_cast<size_t>(rows), static_cast<size_t>(cols)));
 			auto path = p->make_path();
 
-			std::cout << stringify_path(path) << std::endl;
+			std::cout << stringify_path(path) << '\n';
 		} catch (const std::invalid_argument& e) {
-			std::cerr << "Wrong rows or columns value passed: " << e.what() << std::endl;
+			std::cerr << "Wrong rows or columns value passed: " << e.what() << '\n';
 			return 1;
 		} catch (const std::out_of_range& e) {
-			std::cerr << "Rows or columns number is out of range value: " << e.what() << std::endl;
+			std::cerr << "Rows or columns number is out of range value: " << e.what() << '\n';
 			return 1;
 		}
 
@@ -40,7 +44,7 @@ namespace spiral {
 
 	void console_app::validate(ssize_t rows, ssize_t cols) {
 		// works too slow and result will be also too much
-		if (rows >= std::numeric_limits<int32_t>::max() || cols >= std::numeric_limits<int>::max()) {
+		if (rows >= std::numeric_limits<int32_t>::max() || cols >= std::numeric_limits<int32_t>::max()) {
 			throw std::invalid_argument("too big number");
 		}
 
@@ -65,7 +69,7 @@ namespace spiral {
 		size_t rows {};
 		size_t cols {};
 		std::tie(rows, cols) = parse_input(rows_str, cols_str);
-		std::unique_ptr<spiral::spiral_path> p (new spiral::sprial_path_clockwise(static_cast<size_t>(rows), static_cast<size_t>(cols)));
+		std::unique_ptr<spiral::spiral_path> p (new spiral::spiral_path_clockwise(rows, cols));
 		auto path = p->make_path();
 		return stringify_path(path);
 	}

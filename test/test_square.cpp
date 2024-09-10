@@ -3,7 +3,7 @@
 #include "spiral_path.hpp"
 
 TEST(squareMatrix, matrix3x3) {
-	spiral::sprial_path_clockwise p(3, 3);
+	spiral::spiral_path_clockwise p(3, 3);
 	auto path = p.make_path();
 	const std::vector<int> expected {
 		1, 2, 3, 6, 9, 8, 7, 4, 5
@@ -13,7 +13,7 @@ TEST(squareMatrix, matrix3x3) {
 }
 
 TEST(squareMatrix, matrix4x4) {
-	spiral::sprial_path_clockwise p(4, 4);
+	spiral::spiral_path_clockwise p(4, 4);
 	auto path = p.make_path();
 	const std::vector<int> expected {
 		1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 11, 10
@@ -23,7 +23,7 @@ TEST(squareMatrix, matrix4x4) {
 }
 
 TEST(squareMatrix, matrix10x10) {
-	spiral::sprial_path_clockwise p(10, 10);
+	spiral::spiral_path_clockwise p(10, 10);
 	auto path = p.make_path();
 	const std::vector<int> expected {
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
@@ -51,7 +51,7 @@ TEST(squareMatrix, matrix10x10) {
 }
 
 TEST(squareMatrix, matrix9x9) {
-	spiral::sprial_path_clockwise p(9, 9);
+	spiral::spiral_path_clockwise p(9, 9);
 	auto path = p.make_path();
 	const std::vector<int> expected {
 		1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -77,7 +77,7 @@ TEST(squareMatrix, matrix9x9) {
 }
 
 TEST(squareMatrix, matrix2x2) {
-	spiral::sprial_path_clockwise p(2, 2);
+	spiral::spiral_path_clockwise p(2, 2);
 	auto path = p.make_path();
 	const std::vector<int> expected {
 		1, 2, 4, 3

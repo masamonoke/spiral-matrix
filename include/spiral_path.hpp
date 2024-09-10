@@ -12,7 +12,6 @@ namespace spiral {
 			virtual ~spiral_path() = default;
 
 			virtual std::vector<int> make_path() = 0;
-
 	};
 
 	using conditional = std::unique_ptr<spiral_conditional>;
@@ -21,11 +20,11 @@ namespace spiral {
 	// General idea of this solution is to set corner points in [0, 0], [0, cols - 1], [rows - 1, 0], [rows - 1, cols - 1]
 	// and then to move them to center after each circle run and check stop condition.
 	// As the name implies this is clockwise order path solution.
-	class sprial_path_clockwise : public spiral_path {
+	class spiral_path_clockwise : public spiral_path {
 		public:
-			sprial_path_clockwise(size_t rows, size_t cols,
-				conditional stop_cond  = nullptr, // stop_cond ctr depends on rows, cols and corners_ and is no way to default init here
-				filling_strategy fill_strat = std::make_unique<matrix_filling_sequential<int>>());
+			spiral_path_clockwise(size_t rows, size_t cols,
+                conditional stop_cond  = nullptr,
+				filling_strategy fill_strat = nullptr);
 
 			std::vector<int> make_path() override;
 
@@ -43,6 +42,10 @@ namespace spiral {
 			void left();
 			void right();
 			void pull_corner_points();
+
+			void prelude();
+			void traverse();
+			void aftermath();
 	};
 
 }

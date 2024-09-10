@@ -47,6 +47,6 @@ namespace spiral {
 			bool met(const corners& corners) override;
 	};
 
-	std::unique_ptr<matrix_corner_strategy> choose_strategy(size_t rows, size_t cols);
+	std::unique_ptr<matrix_corner_strategy> choose_corner_strategy(size_t rows, size_t cols);
 
 }

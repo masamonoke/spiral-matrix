@@ -31,20 +31,15 @@ namespace spiral {
 	using strategy = std::function<std::unique_ptr<matrix_corner_strategy>(size_t, size_t)>;
 	using pairs = std::vector<std::pair<predicate, strategy>>;
 
-	std::unique_ptr<matrix_corner_strategy> choose_strategy(size_t rows, size_t cols) {
-		// TODO: probably just if-else is ok
-		const static pairs strategies {
-			{ [](size_t rows, size_t cols) { return rows == cols; },           [](size_t rows, size_t cols) { return std::make_unique<matrix_corner_strategy_nxn>(rows, cols); } },
-			{ [](size_t rows, size_t cols) { return rows == 3 || cols == 3; }, [](size_t rows, size_t cols) { return std::make_unique<matrix_corner_strategy_3xn_or_nx3>(rows, cols); } },
-			{ [](size_t, size_t)           { return true; },                   [](size_t rows, size_t cols) { return std::make_unique<matrix_corner_strategy_mxn>(rows, cols); } }
-		};
+	std::unique_ptr<matrix_corner_strategy> choose_corner_strategy(size_t rows, size_t cols) {
+		std::unique_ptr<matrix_corner_strategy> strategy;
 
-		std::unique_ptr<matrix_corner_strategy> strategy = nullptr;
-		for (const auto& kv : strategies) {
-			if (kv.first(rows, cols)) {
-				strategy = kv.second(rows, cols);
-				break;
-			}
+		if (rows == cols) {
+			strategy = std::make_unique<matrix_corner_strategy_nxn>(rows, cols);
+		} else if (rows == 3 || cols == 3) {
+			strategy = std::make_unique<matrix_corner_strategy_3xn_or_nx3>(rows, cols);
+		} else {
+			strategy = std::make_unique<matrix_corner_strategy_mxn>(rows, cols);
 		}
 
 		return strategy;

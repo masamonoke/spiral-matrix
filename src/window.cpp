@@ -20,7 +20,7 @@ namespace spiral::ui {
 		setWindowTitle(QString::fromStdString(title));
 		resize(width, height);
 
-		connect(button_, &QPushButton::clicked, this, &qt_window::on_button_click);
+		connect(button_, &QPushButton::clicked, this, &qt_window::clicked);
 	}
 
 	QGroupBox* qt_window::create_group_box() {
@@ -40,8 +40,8 @@ namespace spiral::ui {
 		setLayout(layout);
 	}
 
-	void qt_window::on_button_click() {
-		auto rows_text = text_row_input_->text();
+	void qt_window::clicked() {
+        auto rows_text = text_row_input_->text();
 		auto cols_text = text_col_input_->text();
 		text_row_input_->clear();
 		text_col_input_->clear();

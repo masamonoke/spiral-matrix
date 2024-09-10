@@ -21,7 +21,7 @@ namespace spiral::ui {
 			qt_window(callback button_callback, const std::string& title, int width = 300, int height = 200, QWidget* parent = nullptr);
 
 		private slots:
-			void on_button_click();
+			void clicked();
 
 		private:
 			QLineEdit* text_row_input_;

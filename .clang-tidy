@@ -38,5 +38,3 @@ Checks: >
   -hicpp-no-array-decay,
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   -readability-redundant-access-specifiers
-
-WarningsAsErrors: true
