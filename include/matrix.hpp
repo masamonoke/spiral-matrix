@@ -11,12 +11,7 @@ namespace spiral
 		using mat = std::vector<std::vector<T>>;
 
 		public:
-			Matrix2D(size_t rows, size_t cols)
-			    : m_Matrix(rows, std::vector<T>(cols, 0)),
-			      m_rows(rows),
-			      m_cols(cols)
-			{
-			}
+			Matrix2D(size_t rows, size_t cols) : m_Matrix(rows, std::vector<T>(cols, 0)), m_rows(rows), m_cols(cols) {}
 
 			std::vector<T>& operator[](size_t row)
 			{

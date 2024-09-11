@@ -5,3 +5,9 @@ bin
 cmake-build-debug
 cmake-build-release
 .idea
+Makefile
+Makefile.Debug
+Makefile.Release
+debug
+release
+.qmake.stash

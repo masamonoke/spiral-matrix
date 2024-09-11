@@ -26,7 +26,7 @@ namespace spiral
 	{
 		public:
 			SpiralPathClockwise(size_t rows, size_t cols, Conditional StopCond = nullptr,
-			                    FillingStrategy FillStrat = nullptr);
+			                    FillingStrategy FillStrat = std::make_unique<MatrixFillingSequential<int>>());
 
 			std::vector<int> MakePath() override;
 

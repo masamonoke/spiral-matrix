@@ -32,7 +32,7 @@ add_executable(${PROJECT_NAME}
 	src/spiral_conditional.cpp
 	src/spiral_path.cpp
 	src/matrix_filling.cpp
-	include/window.hpp # adding this for qt moc and for now dont know workaround
+	include/window.hpp # adding this for qt moc, for now dont know another workaround
 	src/window.cpp
 	src/application.cpp
 )

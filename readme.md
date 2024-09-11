@@ -3,6 +3,8 @@ An implementation of [spiral matrix task](https://leetcode.com/problems/spiral-m
 
 # Build
 
+## Cmake
+
 To build you can use either Qt5 or Qt6
 
 If Qt is in PATH then
@@ -21,6 +23,15 @@ If you installed Qt with brew you can
 ```console
 cmake .. -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 ```
+
+## Qmake
+
+```console
+mkdir build && cd build
+qmake ..
+make -j $(sysctl -n hw.logicalcpu)
+```
+And your executable will be in build folder
 
 # Run
 If you do `./spiral rows cols` then you invoke console output.</br>
@@ -55,7 +66,7 @@ from project root and window.cpp file will be formatted as it should be (Allman 
 
 # Test
 
-There is also tests
+There are also tests
 ```console
 cd build && ctest
 ```

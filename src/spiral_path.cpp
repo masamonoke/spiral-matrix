@@ -9,8 +9,7 @@ namespace spiral
 	      m_StopConditional(StopCond == nullptr
 	                            ? std::make_unique<SpiralConditionalClockwise>(rows, cols, m_Corners)
 	                            : std::move(StopCond)),
-	      m_FillingStrategy(FillStrat == nullptr ? std::make_unique<MatrixFillingSequential<int>>()
-	                                             : std::move(FillStrat)),
+	      m_FillingStrategy(std::move(FillStrat)),
 	      m_Matrix(m_FillingStrategy->Fill(rows, cols))
 	{
 	}
@@ -81,7 +80,7 @@ namespace spiral
 
 	void SpiralPathClockwise::Aftermath()
 	{
-		// exceptions to a rule when there is left elements that is not appended to the path
+		// exceptions to a rule when there is left elements that are not appended to the path
 		if ((m_Matrix.GetRows() == m_Matrix.GetCols()) && m_Matrix.GetRows() % 2 != 0)
 		{
 			m_Path.emplace_back(m_Matrix[m_Corners->ul.row][m_Corners->ul.col]);

@@ -67,8 +67,8 @@ namespace spiral
 
 	QtApp::QtApp(int argc, char** argv) : m_QtApp(argc, argv)
 	{
-		m_Window = std::make_unique<ui::QtWindow>([](const std::string& rows, const std::string& cols)
-		                                          { return ButtonCallback(rows, cols); }, "Matrix Spiral");
+		auto Callback = [](const std::string& rows, const std::string& cols) { return ButtonCallback(rows, cols); };
+		m_Window      = std::make_unique<ui::QtWindow>(Callback, "Matrix Spiral");
 	}
 
 	int QtApp::Run()

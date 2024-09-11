@@ -11,8 +11,8 @@ AlwaysBreakBeforeMultilineStrings: false
 BreakBeforeBraces: Allman
 
 IndentAccessModifiers: true
-IndentWidth: 8
-TabWidth: 8
+IndentWidth: 4
+TabWidth: 4
 UseTab: ForIndentation
 IndentCaseLabels: true
 

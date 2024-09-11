@@ -40,8 +40,7 @@ namespace spiral
 			QApplication                  m_QtApp;
 			std::unique_ptr<ui::QtWindow> m_Window;
 
-			static std::string ButtonCallback(const std::string& rowsStr, const std::string& colsStr);
-			static std::pair<size_t, size_t> ParseInput(const std::string& rowsStr,
-			                                            const std::string& colsStr);
+			static std::string               ButtonCallback(const std::string& rowsStr, const std::string& colsStr);
+			static std::pair<size_t, size_t> ParseInput(const std::string& rowsStr, const std::string& colsStr);
 	};
 } // namespace spiral
